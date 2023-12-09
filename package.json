@@ -1,0 +1,54 @@
+{
+	"name": "version-checker",
+	"description": "Check versions of various software on the Edge.",
+	"version": "0.1.0",
+	"scripts": {
+		"clean": "rm --recursive --force node_modules dist *.tsbuildinfo",
+		"update": "yarn upgrade-interactive",
+		"lint": "npx eslint source",
+		"build": "npm run lint && npx wrangler deploy --dry-run --outdir dist",
+		"dev": "npx wrangler dev",
+		"deploy": "npx wrangler deploy"
+	},
+	"author": {
+		"name": "viral32111",
+		"email": "contact@viral32111.com",
+		"url": "https://viral32111.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/viral32111/version-checker.git"
+	},
+	"bugs": {
+		"url": "https://github.com/viral32111/version-checker/issues"
+	},
+	"homepage": "https://github.com/viral32111/version-checker",
+	"keywords": [
+		"versions",
+		"api",
+		"cloudflare",
+		"worker",
+		"serverless",
+		"edge"
+	],
+	"license": "AGPL-3.0-only",
+	"private": true,
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20231121.0",
+		"@typescript-eslint/eslint-plugin": "^6.13.2",
+		"@typescript-eslint/parser": "^6.13.2",
+		"eslint": "^8.55.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.0.1",
+		"prettier": "^3.1.0",
+		"prettier-eslint": "^16.1.2",
+		"typescript": "^5.3.3",
+		"wrangler": "^3.19.0"
+	},
+	"engines": {
+		"node": ">=21.4.0",
+		"npm": ">=10.2.5",
+		"yarn": ">=4.0.2"
+	},
+	"packageManager": "yarn@4.0.2"
+}

@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    paths:
+      - '**'
+    branches:
+      - '**'
+    tags:
+      - '*.*.*'
+  workflow_dispatch:
+
+env:
+  ARTIFACT_NAME: version-checker
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 21
+
+      - name: Setup Yarn
+        run: yarn set version berry
+  
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build code
+        run: yarn build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: |
+            dist
+            package.json
+            yarn.lock
+            README.md
+            LICENSE.txt
+
+  deploy:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+    needs: build
+    environment:
+      name: cloudflare-workers
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: cloudflare-workers
+      cancel-in-progress: false
+    permissions:
+      contents: read
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 21
+
+      - name: Setup Yarn
+        run: yarn set version berry
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: artifact
+
+      # TODO
+
+  release:
+    name: Release
+    runs-on: ubuntu-22.04
+    needs: build
+    if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          path: artifact
+      
+      - name: Bundle build artifact
+        run: zip -r ${{ env.ARTIFACT_NAME }}.zip artifact
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          tag_name: ${{ github.ref_name }}
+          files: ${{ env.ARTIFACT_NAME }}.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
