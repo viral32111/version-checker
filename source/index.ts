@@ -4,19 +4,42 @@ export interface Env {}
 export default {
 	// eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unused-vars
 	async fetch(request: Request, env: Env, context: ExecutionContext): Promise<Response> {
-		return new Response(JSON.stringify([]), {
-			status: 501,
-			headers: {
-				"X-Robots-Tag": "noindex, nofollow",
+		const requestUrl = new URL(request.url)
+		const requestPath = requestUrl.pathname.slice(1)
+		const requestParameters = Object.fromEntries(requestUrl.searchParams)
 
-				"X-Content-Type-Options": "nosniff",
-				"X-Frame-Options": "deny",
+		if (!requestPath)
+			return new Response(null, {
+				status: 307,
+				headers: {
+					Location: "https://github.com/viral32111/version-checker"
+				}
+			})
 
-				"X-Source-Url": "https://github.com/viral32111/version-checker-worker",
-				"X-Contact-Name": "viral32111",
-				"X-Contact-Email": "contact@viral32111",
-				"X-Contact-Url": "https://viral32111.com"
+		return new Response(
+			JSON.stringify({
+				software: requestPath,
+				parameters: requestParameters,
+				versions: []
+			}),
+			{
+				status: 501,
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+
+					"Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+
+					"X-Robots-Tag": "noindex, nofollow",
+
+					"X-Content-Type-Options": "nosniff",
+					"X-Frame-Options": "deny",
+
+					"X-Source-Url": "https://github.com/viral32111/version-checker",
+					"X-Contact-Name": "viral32111",
+					"X-Contact-Email": "contact@viral32111",
+					"X-Contact-Url": "https://viral32111.com"
+				}
 			}
-		})
+		)
 	}
 }
