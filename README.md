@@ -18,46 +18,46 @@ An example of fetching PHP 8.x releases that are at least a month old.
 ```bash
 $ curl -s 'https://versions.viral32111.dev/php?match=8&age=30d' | jq
 [
-	{
-		"version": "8.3.0",
-		"stable": true,
-		"support": {
-			"lts": false,
-			"eol": false
-		}
-		"changelog": "https://www.php.net/ChangeLog-8.php#8.3.0",
-		"sources": {
-			"github": "https://github.com/php/php-src/tree/php-8.3.0"
-		}
-		"downloads": {
-			"gz": {
-				"url": "https://www.php.net/distributions/php-8.3.0.tar.gz",
-				"signature": "https://www.php.net/distributions/php-8.3.0.tar.gz.asc",
-				"checksums": {
-					"sha256": "557ae14650f1d1984d3213e3fcd8d93a5f11418b3f8026d3a2d5022251163951"
-				}
-			},
-			"bz2": {
-				"url": "https://www.php.net/distributions/php-8.3.0.tar.bz2",
-				"signature": "https://www.php.net/distributions/php-8.3.0.tar.bz2.asc",
-				"checksums": {
-					"sha256": "de67d0833d42b196e5a66fa1a332f45e296cbe8e9472e9256b2a071c34dc5ed6"
-				}
-			},
-			"xz": {
-				"url": "https://www.php.net/distributions/php-8.3.0.tar.xz",
-				"signature": "https://www.php.net/distributions/php-8.3.0.tar.xz.asc",
-				"checksums": {
-					"sha256": "1db84fec57125aa93638b51bb2b15103e12ac196e2f960f0d124275b2687ea54"
-				}
-			}
-		}
-	},
-	{
-		"version": "8.2.12",
-		...
-	},
-	...
+  {
+    "version": "8.3.0",
+    "stable": true,
+    "support": {
+      "lts": false,
+      "eol": false
+    }
+    "changelog": "https://www.php.net/ChangeLog-8.php#8.3.0",
+    "sources": {
+      "github": "https://github.com/php/php-src/tree/php-8.3.0"
+    }
+    "downloads": {
+      "gz": {
+        "url": "https://www.php.net/distributions/php-8.3.0.tar.gz",
+        "signature": "https://www.php.net/distributions/php-8.3.0.tar.gz.asc",
+        "checksums": {
+          "sha256": "557ae14650f1d1984d3213e3fcd8d93a5f11418b3f8026d3a2d5022251163951"
+        }
+      },
+      "bz2": {
+        "url": "https://www.php.net/distributions/php-8.3.0.tar.bz2",
+        "signature": "https://www.php.net/distributions/php-8.3.0.tar.bz2.asc",
+        "checksums": {
+          "sha256": "de67d0833d42b196e5a66fa1a332f45e296cbe8e9472e9256b2a071c34dc5ed6"
+        }
+      },
+      "xz": {
+        "url": "https://www.php.net/distributions/php-8.3.0.tar.xz",
+        "signature": "https://www.php.net/distributions/php-8.3.0.tar.xz.asc",
+        "checksums": {
+          "sha256": "1db84fec57125aa93638b51bb2b15103e12ac196e2f960f0d124275b2687ea54"
+        }
+      }
+    }
+  },
+  {
+    "version": "8.2.12",
+    ...
+  },
+  ...
 ]
 ```
 
@@ -65,40 +65,39 @@ $ curl -s 'https://versions.viral32111.dev/php?match=8&age=30d' | jq
 
 The name of the software should be appended to the API base URL as the path.
 
-* [Alpine Linux](https://alpinelinux.org): `/alpine`.
-* [Ubuntu](https://ubuntu.com): `/ubuntu`)
-* [Apache HTTPd](https://httpd.apache.org): `/httpd`.
-* [PHP](https://php.net): `/php`.
-	* [Composer](https://getcomposer.org): `/composer`.
-* [Node.js](https://nodejs.org): `/node`.
-	* [NPM](https://npmjs.com): `/npm`.
-	* [Yarn](https://yarnpkg.com): `/yarn`.
-* [.NET Core Runtime](https://dotnet.microsoft.com): `/dotnet`.
-* [ASP.NET Core Runtime](https://dotnet.microsoft.com): `/aspdotnet`.
-* [Java](https://jdk.java.net): `/java`
-* [Python](https://python.org): `/python`.
-	* [PIP](https://pypi.org): `/pip`.
-* [Go](https://go.dev): `/go`.
+| Name | Path | Notes |
+| ---- | ---- | ----- |
+| [Alpine Linux](https://alpinelinux.org) | `/alpine` | |
+| [Ubuntu](https://ubuntu.com) | `/ubuntu` | |
+| [Apache HTTPd](https://httpd.apache.org) | `/httpd` | |
+| [PHP](https://php.net) | `/php` | |
+| [Composer](https://getcomposer.org) | `/composer` | The `for` parameter checks against PHP. |
+| [Node.js](https://nodejs.org) | `/node` | |
+| [NPM](https://npmjs.com) | `/npm` | The `for` parameter checks against Node.js. |
+| [Yarn](https://yarnpkg.com) | `/yarn` | The `for` parameter checks against Node.js. |
+| [.NET Core Runtime](https://dotnet.microsoft.com) | `/dotnet` | |
+| [ASP.NET Core Runtime](https://dotnet.microsoft.com) | `/aspdotnet` | |
+| [Java](https://jdk.java.net) | `/java` | |
+| [Python](https://python.org) | `/python` | |
+| [PIP](https://pypi.org) | `/pip` | The `for` parameter checks against Python. |
+| [Go](https://go.dev) | `/go` | |
 
 ## Query Parameters
 
 These should be passed as [standard query-string parameters](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_URL#parameters) after the `software` path.
 
-* `min=semver`: Greater than **or** equal to the given version.
-* `max=semver`: Less than **or** equal to the given version.
-* `match=semver`: Equal to the given semantic version.
-* `for=semver`: Compatible with the given semantic version.
-	* **Only applicable to software that depends on another (e.g., package managers).**
-* `age=duration`: Only permit versions older than the given duration.
-	* `duration` is an integer suffixed by a unit (e.g., `30m`, `6h`, `5d`). The default is `0s`.
-* `stable=boolean`: Toggle between stable or non-stable (i.e., beta, alpha) versions.
-* `lts=boolean`: Toggle between long-term support (LTS) and short-term support (STS) versions.
-* `eol=boolean`: Toggle between active and end-of-life (EoL) versions.
+| Parameter | Type | Default | Description | Notes |
+| --------- | ---- | ----------- | ----- |
+| `min` | Semantic Version | | Greater than **or** equal to the given version. | |
+| `max` | Semantic Version | | Less than **or** equal to the given version. | |
+| `match` | Semantic Version | | Equal to the given semantic version. | |
+| `for` | Semantic Version | All | Compatible with the given semantic version. | Only applicable to software that depends on another (e.g., package managers). |
+| `age` | Duration | `0s` | Only permit versions older than the given duration. | Value is an integer suffixed by a unit (e.g., `30m`, `6h`, `5d`). The default is `0s`. |
+| `stable` | Boolean | Both | Toggle between stable or non-stable (i.e., beta, alpha) versions. | Defaults to both possibilities when not given. |
+| `lts` | Boolean | Both | Toggle between long-term support (LTS) and short-term support (STS) versions. | Defaults to both possibilities when not given. |
+| `eol` | Boolean | Both | Toggle between active and end-of-life (EoL) versions. | Defaults to both possibilities when not given. |
 
-### Notes
-
-1. Semantic versions (`semver`) values may be partial (i.e., `1`, `1.2`, `1.2.3`).
-2. Boolean values default to both possibilities when not given.
+Semantic versions (`semver`) values may be partial (i.e., `1`, `1.2`, `1.2.3`).
 
 ## ⚖️ License
 
