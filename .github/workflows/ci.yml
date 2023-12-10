@@ -29,7 +29,9 @@ jobs:
           node-version: 21
 
       - name: Setup Yarn
-        run: yarn set version berry
+        run: |
+          corepack enable
+          yarn set version berry
   
       - name: Install dependencies
         run: yarn install
@@ -76,7 +78,9 @@ jobs:
           node-version: 21
 
       - name: Setup Yarn
-        run: yarn set version berry
+        run: |
+          corepack enable
+          yarn set version berry
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
