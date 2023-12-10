@@ -78,6 +78,8 @@ The name of the software should be appended to the API base URL as the path.
 
 ### To-Do
 
+| Name | Path | Notes |
+| ---- | ---- | ----- |
 | [.NET Core Runtime](https://dotnet.microsoft.com) | `/dotnet` | |
 | [ASP.NET Core Runtime](https://dotnet.microsoft.com) | `/aspdotnet` | |
 | [Java](https://jdk.java.net) | `/java` | |
@@ -90,7 +92,7 @@ The name of the software should be appended to the API base URL as the path.
 These should be passed as [standard query-string parameters](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_URL#parameters) after the `software` path.
 
 | Parameter | Type | Default | Description | Notes |
-| --------- | ---- | ----------- | ----- |
+| --------- | ---- | ----------- | ----- | ----- |
 | `min` | Semantic Version | | Greater than **or** equal to the given version. | |
 | `max` | Semantic Version | | Less than **or** equal to the given version. | |
 | `match` | Semantic Version | | Equal to the given semantic version. | |
