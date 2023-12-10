@@ -40,6 +40,7 @@ jobs:
         run: yarn build
 
       - name: Deploy to Cloudflare Workers
+        if: ${{ github.event_name != 'pull_request' && !startsWith( github.ref_name, 'dependabot/' ) }}
         uses: cloudflare/wrangler-action@v3
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
