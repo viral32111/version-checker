@@ -1,45 +1,42 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Env {}
+import { softwareHandlers } from "./handlers"
+import { errorResponse, isSoftware, parseQueryParameters, successResponse } from "./helpers"
+
+const handleRequest = async (request: Request): Promise<Response> => {
+	// Parse the request
+	const requestUrl = new URL(request.url)
+	const requestPath = requestUrl.pathname.slice(1)
+	const requestParameters = parseQueryParameters(requestUrl.searchParams)
+
+	// Redirect to GitHub repo if no software is given
+	if (!requestPath)
+		return new Response(null, {
+			status: 307,
+			headers: {
+				Location: "https://github.com/viral32111/version-checker"
+			}
+		})
+
+	// Is the software supported?
+	if (isSoftware(requestPath)) {
+		// Ensure the handler exists
+		const softwareHandler = softwareHandlers.get(requestPath)
+		if (softwareHandler === undefined) return errorResponse({ code: 1, reason: "Software is not supported" }, 400)
+		if (softwareHandler === null) return errorResponse({ code: 2, reason: "Software is not implemented yet" }, 501)
+
+		// Execute the handler
+		const handlerResponse = await softwareHandler(requestParameters)
+
+		// Return the response
+		return successResponse({
+			software: requestPath,
+			parameters: requestParameters,
+			versions: handlerResponse
+		})
+	}
+
+	return errorResponse({ code: 1, reason: "Software is not supported" }, 400)
+}
 
 export default {
-	// eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unused-vars
-	async fetch(request: Request, env: Env, context: ExecutionContext): Promise<Response> {
-		const requestUrl = new URL(request.url)
-		const requestPath = requestUrl.pathname.slice(1)
-		const requestParameters = Object.fromEntries(requestUrl.searchParams)
-
-		if (!requestPath)
-			return new Response(null, {
-				status: 307,
-				headers: {
-					Location: "https://github.com/viral32111/version-checker"
-				}
-			})
-
-		return new Response(
-			JSON.stringify({
-				software: requestPath,
-				parameters: requestParameters,
-				versions: []
-			}),
-			{
-				status: 501,
-				headers: {
-					"Content-Type": "application/json; charset=utf-8",
-
-					"Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
-
-					"X-Robots-Tag": "noindex, nofollow",
-
-					"X-Content-Type-Options": "nosniff",
-					"X-Frame-Options": "deny",
-
-					"X-Source-Url": "https://github.com/viral32111/version-checker",
-					"X-Contact-Name": "viral32111",
-					"X-Contact-Email": "contact@viral32111",
-					"X-Contact-Url": "https://viral32111.com"
-				}
-			}
-		)
-	}
+	fetch: handleRequest
 }
