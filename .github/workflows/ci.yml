@@ -10,13 +10,13 @@ on:
       - '*.*.*'
   workflow_dispatch:
 
-env:
-  ARTIFACT_NAME: version-checker
-
 jobs:
   build:
     name: Build
     runs-on: ubuntu-22.04
+    environment:
+      name: cloudflare-workers
+      url: ${{ vars.CLOUDFLARE_WORKER_URL }}
     permissions:
       contents: read
     steps:
@@ -37,10 +37,18 @@ jobs:
       - name: Build code
         run: yarn build
 
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: '3.19.0'
+          packageManager: yarn
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          name: ${{ github.event.repository.name }}
           path: |
             dist
             package.json
@@ -55,7 +63,7 @@ jobs:
     needs: build
     environment:
       name: cloudflare-workers
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ vars.CLOUDFLARE_WORKER_PRODUCTION_URL }}
     concurrency:
       group: cloudflare-workers
       cancel-in-progress: false
@@ -70,13 +78,14 @@ jobs:
       - name: Setup Yarn
         run: yarn set version berry
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v3
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
         with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: artifact
-
-      # TODO
+          environment: production
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: '3.19.0'
+          packageManager: yarn
 
   release:
     name: Release
@@ -92,12 +101,12 @@ jobs:
           path: artifact
       
       - name: Bundle build artifact
-        run: zip -r ${{ env.ARTIFACT_NAME }}.zip artifact
+        run: zip -r ${{ github.event.repository.name }}.zip artifact
 
       - name: Create draft release
         uses: softprops/action-gh-release@v1
         with:
           draft: true
           tag_name: ${{ github.ref_name }}
-          files: ${{ env.ARTIFACT_NAME }}.zip
+          files: ${{ github.event.repository.name }}.zip
           token: ${{ secrets.GITHUB_TOKEN }}
