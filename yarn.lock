@@ -2495,9 +2495,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-eslint@npm:^16.1.2":
-  version: 16.1.2
-  resolution: "prettier-eslint@npm:16.1.2"
+"prettier-eslint@npm:^16.2.0":
+  version: 16.2.0
+  resolution: "prettier-eslint@npm:16.2.0"
   dependencies:
     "@typescript-eslint/parser": "npm:^6.7.5"
     common-tags: "npm:^1.4.0"
@@ -2511,7 +2511,7 @@ __metadata:
     require-relative: "npm:^0.8.7"
     typescript: "npm:^5.2.2"
     vue-eslint-parser: "npm:^9.1.0"
-  checksum: 0e973b2cb9926cdf738a5cacf65a037487306044843498a86191aa639a8980114caf657f3580e237e1878770603511b57a3a14226fd6a541c0be6eab632063c2
+  checksum: 6240ea94bfc6d3a01376283a045d0869569fdbe9f2e4c0a20bdeb372c14922ccb712e38c36108258b3c70fcb176f4e0a78b7f773e12a346bae990ab256056550
   languageName: node
   linkType: hard
 
@@ -3080,7 +3080,7 @@ __metadata:
     eslint-config-prettier: "npm:^9.1.0"
     eslint-plugin-prettier: "npm:^5.0.1"
     prettier: "npm:^3.1.0"
-    prettier-eslint: "npm:^16.1.2"
+    prettier-eslint: "npm:^16.2.0"
     typescript: "npm:^5.3.3"
     wrangler: "npm:^3.19.0"
   languageName: unknown
